@@ -5,8 +5,11 @@ import vuetify from './plugins/vuetify'
 import './registerServiceWorker'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import VueCompositionAPI from '@vue/composition-api'
+import title from "./mixins/title";
 
 Vue.use(PiniaVuePlugin)
+Vue.mixin(title)
+
 const pinia = createPinia()
 Vue.use(VueCompositionAPI)
 
