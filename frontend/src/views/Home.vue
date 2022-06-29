@@ -17,6 +17,7 @@
               rounded
               color="success"
               class="text-capitalize mb-6"
+              :loading="createAccountBtnLoad"
               @click="createAccount"
               >create account</v-btn
             >
@@ -27,6 +28,7 @@
               rounded
               color="success"
               class="text-capitalize"
+              :loading="loginBtnLoad"
               @click="login"
               >log in</v-btn
             >
@@ -34,6 +36,26 @@
         </v-col>
       </v-row>
     </v-container>
+
+    <!-- Error snackbar -->
+    <v-snackbar
+      v-model="showErrorSnackbar"
+      :timeout="3000"
+      transition="slide-x-transition"
+    >
+      {{ errorMessage }}
+
+      <template v-slot:action="{ attrs }">
+        <v-btn
+          color="error"
+          text
+          v-bind="attrs"
+          @click="showErrorSnackbar = false"
+        >
+          Close
+        </v-btn>
+      </template>
+    </v-snackbar>
   </v-card>
 </template>
 
@@ -41,14 +63,40 @@
 export default {
   name: "Home",
   title: "Home",
+  data() {
+    return {
+      createAccountBtnLoad: false,
+      loginBtnLoad: false,
+      showErrorSnackbar: false,
+      errorMessage: "",
+    };
+  },
   methods: {
     async createAccount() {
-      await this.$auth.loginWithPopup();
-      this.$router.push({ name: "dashboard" });
+      this.createAccountBtnLoad = true;
+
+      try {
+        await this.$auth.loginWithPopup();
+        this.$router.push({ name: "dashboard" });
+      } catch (error) {
+        this.errorMessage = error;
+        this.showErrorSnackbar = true;
+      } finally {
+        this.createAccountBtnLoad = false;
+      }
     },
     async login() {
-      await this.$auth.loginWithPopup();
-      this.$router.push({ name: "dashboard" });
+      this.loginBtnLoad = true;
+
+      try {
+        await this.$auth.loginWithPopup();
+        this.$router.push({ name: "dashboard" });
+      } catch (error) {
+        this.errorMessage = error;
+        this.showErrorSnackbar = true;
+      } finally {
+        this.loginBtnLoad = false;
+      }
     },
   },
 };
