@@ -6,6 +6,20 @@ import './registerServiceWorker'
 import { createPinia, PiniaVuePlugin } from 'pinia'
 import VueCompositionAPI from '@vue/composition-api'
 import title from "./mixins/title";
+import { Auth0Plugin } from './auth';
+import { domain, clientId } from '../auth_config.json';
+
+Vue.use(Auth0Plugin, {
+  domain,
+  clientId,
+  onRedirectCallback: appState => {
+    router.push(
+      appState && appState.targetUrl
+        ? appState.targetUrl
+        : window.location.pathname
+    );
+  }
+});
 
 Vue.use(PiniaVuePlugin)
 Vue.mixin(title)

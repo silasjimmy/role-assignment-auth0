@@ -9,16 +9,15 @@
           </div>
         </v-col>
         <v-col cols="12">
-          <div>
+          <div v-if="!$auth.loading">
             <v-btn
               block
               depressed
               large
               rounded
-              link
-              to="/create-account"
               color="success"
               class="text-capitalize mb-6"
+              @click="createAccount"
               >create account</v-btn
             >
             <v-btn
@@ -26,10 +25,9 @@
               depressed
               large
               rounded
-              link
-              to="/login"
               color="success"
               class="text-capitalize"
+              @click="login"
               >log in</v-btn
             >
           </div>
@@ -43,5 +41,15 @@
 export default {
   name: "Home",
   title: "Home",
+  methods: {
+    async createAccount() {
+      await this.$auth.loginWithPopup();
+      this.$router.push({ name: "dashboard" });
+    },
+    async login() {
+      await this.$auth.loginWithPopup();
+      this.$router.push({ name: "dashboard" });
+    },
+  },
 };
 </script>
